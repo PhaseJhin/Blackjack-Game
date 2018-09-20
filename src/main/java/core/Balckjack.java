@@ -12,16 +12,16 @@ public class Balckjack {
 	private ArrayList<String> card = new ArrayList<String>(52);
 	private String[] suit = {"S","C","D","H"};
 	private String[] rank = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
-	private ArrayList<String> handcard = new ArrayList<String>();
-	private ArrayList<String> handcard2 = new ArrayList<String>();
-	private ArrayList<String> Dhandcard = new ArrayList<String>();
-	private ArrayList<String> Dhandcard2 = new ArrayList<String>();
-	private int point = 0;
-	private int point2 = 0;
-	private int dealerpoint = 0;
-	private int dealerpoint2 = 0;
+	public ArrayList<String> handcard = new ArrayList<String>();
+	public ArrayList<String> handcard2 = new ArrayList<String>();
+	public ArrayList<String> Dhandcard = new ArrayList<String>();
+	public ArrayList<String> Dhandcard2 = new ArrayList<String>();
+	public int point = 0;
+	public int point2 = 0;
+	public int dealerpoint = 0;
+	public int dealerpoint2 = 0;
 	private String[] commands;
-	
+	int counter = 4;
 	public boolean Ace;
 	
 	//private int cardNum;
@@ -29,9 +29,9 @@ public class Balckjack {
 
 
 	
-	public void play() throws FileNotFoundException {
+	public void play(String s) throws FileNotFoundException {
 		System.out.println("Welcome to Balckjack");
-		fileinput();
+		fileinput(s);
 		result();
 	}
 	
@@ -49,14 +49,14 @@ public class Balckjack {
 		Collections.shuffle(card);
 	}
 	
-	private void fileinput() throws FileNotFoundException {
+	private void fileinput(String s) throws FileNotFoundException {
 		System.out.print("\n Do you want file input or console input ?(F/C) :");
 		String temp = new Scanner(System.in).next();
 		
 		if (temp.equalsIgnoreCase("F")) {
-			System.out.print("\n Please input file name :");
-			Scanner sc = new Scanner(System.in);
-			File fs =new File (sc.nextLine());
+			//System.out.print("\n Please input file name :");
+			//Scanner sc = new Scanner(System.in);
+			File fs =new File (s);
 			Scanner fl = new Scanner(fs);
 			commands  =fl.nextLine().split("\\s+");
 			
@@ -76,6 +76,74 @@ public class Balckjack {
 			dealerpoint += determineCardValue2(commands[2].substring(1));
 			dealerpoint += determineCardValue2(commands[3].substring(1));
 			
+			if(handcard2.get(0).charAt(1)==handcard2.get(1).charAt(1)) {
+				//System.out.println("Do you want to split (Y/N)");
+				if (commands[counter].equalsIgnoreCase("D")) {
+					counter++;
+					
+					handcard.add(handcard2.get(0));
+					handcard2.remove(0);
+					
+					point -= determineCardValue(handcard2.get(0));
+					point2 += determineCardValue(handcard.get(0));
+					
+					handcard2.add(commands[counter]);
+					counter++;
+					point += determineCardValue(handcard2.get(handcard2.size()-1));
+					
+					handcard.add(commands[counter]);
+					counter++;
+					point2 += determineCardValue(handcard.get(handcard.size()-1));
+					
+					System.out.print("\nPlayer split hand card !!!");
+					
+					System.out.print("\nPlayer First hand card :");
+					System.out.print(handcard);
+					
+					System.out.print("\nPlayer Second hand card :");
+					System.out.print(handcard2);
+					
+					System.out.println(" \nCurent First hand Point :" + point);
+					System.out.println(" \nCurent Second hand Point :" + point2);
+				}
+					
+			}
+			
+			hitcard();
+			
+			if(Dhandcard2.get(0).charAt(1)==Dhandcard2.get(1).charAt(1)) {
+				
+					
+					Dhandcard.add(Dhandcard2.get(0));
+					Dhandcard2.remove(0);
+					
+					dealerpoint -= determineCardValue(Dhandcard2.get(0));
+					dealerpoint2 += determineCardValue(Dhandcard.get(0));
+					
+					Dhandcard2.add(commands[counter]);
+					counter++;
+					
+					dealerpoint += determineCardValue(Dhandcard2.get(Dhandcard2.size()-1));
+					
+					Dhandcard.add(commands[counter]);
+					counter++;
+					dealerpoint2 += determineCardValue(Dhandcard.get(Dhandcard.size()-1));
+					
+					System.out.print("\nDealer split hand card !!!");
+					
+					System.out.print("\nDealer First hand card :");
+					System.out.print(Dhandcard);
+					
+					System.out.print("\nDealer Second hand card :");
+					System.out.print(Dhandcard2);
+					
+					System.out.println(" \nCurent First hand Point :" + dealerpoint);
+					System.out.println(" \nCurent Second hand Point :" + dealerpoint2);
+				
+					hitcard();
+			}
+			
+			
 			/*
 			System.out.print("\nPlayer hand card :");
 			System.out.print(handcard2.get(0)+ " ");
@@ -89,7 +157,7 @@ public class Balckjack {
 			System.out.println("Dealer CurentPoint :" + dealerpoint);
 			*/
 			
-			hitcard();
+			
 		}
 		if (temp.equalsIgnoreCase("C")) {
 			ccard();
@@ -210,6 +278,29 @@ public class Balckjack {
 			
 			System.out.println("\nHit? (iput N to stand and input anything else to Hit)");
 			if (new Scanner(System.in).next().equalsIgnoreCase("N")) {
+					while(true) {
+					if (point2 > 0) {
+						if (point2 >= 21) {
+							break;
+						}
+					
+						System.out.println("\n Hit? second hand card (iput N to stand and input anything else to Hit)");
+						if (new Scanner(System.in).next().equalsIgnoreCase("N")) {
+							break;
+						}else {
+							handcard2.add(card.get(0));
+							card.remove(0);
+							point += determineCardValue(handcard2.get(handcard2.size()-1));
+							//cardNum++;
+							System.out.print("\nPlayer  second hand card :");
+							System.out.print(handcard2);
+							System.out.println(" \nCurentPoint :" + point2);
+						}
+					
+					}else {
+						break;
+					}
+				}
 				break;
 			}else {
 				handcard.add(card.get(0));
@@ -220,33 +311,15 @@ public class Balckjack {
 				System.out.print(handcard);
 				System.out.println(" \nCurentPoint :" + point);
 			}
-			if (point2 > 0) {
-				if (point2 >= 21) {
-					break;
-				}
 			
-				System.out.println("\n Hit? second hand card (iput N to stand and input anything else to Hit)");
-				if (new Scanner(System.in).next().equalsIgnoreCase("N")) {
-					break;
-				}else {
-					handcard2.add(card.get(0));
-					card.remove(0);
-					point += determineCardValue(handcard2.get(handcard2.size()-1));
-					//cardNum++;
-					System.out.print("\nPlayer  second hand card :");
-					System.out.print(handcard2);
-					System.out.println(" \nCurentPoint :" + point2);
-				}
-			
-			}
 		}
 		
 	}
 	
 	private void hitcard(){
-		int counter = 4;
+		
 		if (counter +1 > commands.length) System.exit(0);
-		//System.out.println(commands[counter]);
+		
 		while(commands[counter].indexOf("H") == 0 || commands[counter].indexOf("S") == 0) {
 			
 			if (Ace && point>21) {
@@ -262,8 +335,31 @@ public class Balckjack {
 				point += determineCardValue2(commands[counter].substring(1));
 				counter++;
 			}else if (commands[counter].indexOf("S") == 0) {
+				
 				counter+=1;
 				break;
+			}
+		}
+		if (point2 >0) {
+			while(commands[counter].indexOf("H") == 0 || commands[counter].indexOf("S") == 0) {
+				
+				if (Ace && point2>21) {
+					point2 = point2 - 10;
+				}
+	        	if (point2 >= 21) {
+	        		break;
+	        	}
+				
+				if (commands[counter].indexOf("H") == 0 ) {
+					counter++;
+					handcard.add(commands[counter]);
+					point2 += determineCardValue2(commands[counter].substring(1));
+					counter++;
+				}else if (commands[counter].indexOf("S") == 0) {
+					
+					counter+=1;
+					break;
+				}
 			}
 		}
 		
@@ -275,12 +371,31 @@ public class Balckjack {
 			
 			if (Ace && dealerpoint>21) {
 				dealerpoint = dealerpoint - 10;
+				Ace = false;
 			}
 			if (dealerpoint >= 21) {
 				break;
 			}
 			
 		}
+		if(dealerpoint >= 21 && dealerpoint2 >0) {
+			while(dealerpoint2 < 17 && counter < commands.length) {
+				
+				Dhandcard.add(commands[counter]);
+				dealerpoint2 += determineCardValue2(commands[counter].substring(1));
+				counter++;
+				
+				if (Ace && dealerpoint2>21) {
+					dealerpoint = dealerpoint - 10;
+					Ace = false;
+				}
+				if (dealerpoint2 >= 21) {
+					break;
+				}
+			}
+			
+		}
+		
 		outresult2();
 		
 	}
@@ -327,34 +442,40 @@ public class Balckjack {
 			card.remove(0);
 			//dealerpoint += determineCardValue(Dhandcard.get(Dhandcard.size()-1));
 			
-			if (Ace && dealerpoint>21) {
-				dealerpoint = dealerpoint - 10;
-			}
+				if (Ace && dealerpoint>21) {
+					dealerpoint = dealerpoint - 10;
+				}
 			
 			}else {
 				break;
-			}
-			if (dealerpoint2 > 0) {
-				
-				if (dealerpoint2 < 17) {
-					Dhandcard2.add(card.get(0));
-					card.remove(0);
-					dealerpoint2 += determineCardValue(Dhandcard2.get(Dhandcard2.size()-1));
-					
-					if (Ace && dealerpoint2>21) {
-						dealerpoint2 = dealerpoint2 - 10;
-					}
-					
-					}else {
-						break;
-					}
-				
 			}
 		}
 		
 		System.out.print(" \nDealer First Card :");
 		System.out.print(Dhandcard.get(0));
 		
+		
+		while (true) {
+					if (dealerpoint2 > 0) {
+					
+					if (dealerpoint2 < 17) {
+						Dhandcard2.add(card.get(0));
+						card.remove(0);
+						dealerpoint2 += determineCardValue(Dhandcard2.get(Dhandcard2.size()-1));
+						
+						if (Ace && dealerpoint2>21) {
+							dealerpoint2 = dealerpoint2 - 10;
+							Ace=false;
+						}
+						
+						}else {
+							break;
+						}
+					
+				}else {
+					break;
+				}
+		}
 		if (dealerpoint2 > 0) {
 			System.out.print(" \nDealer second hand fist Card :");
 			System.out.print(Dhandcard2.get(0));
@@ -414,17 +535,27 @@ public class Balckjack {
 		System.out.print("\nPlayer hand card :");
 		System.out.print(handcard2);
 		System.out.println("\nPlayerpoint:"+point);
+		if (point2>0) {
+			System.out.print("\nPlayer second hand card :");
+			System.out.print(handcard);
+			System.out.println("\nPlayerpoint:"+point2);
+		}
 		
 		System.out.print("\nDealer hand card :");
 		System.out.print(Dhandcard2);
 		System.out.println("\nDealerpoint:"+dealerpoint);
+		if(dealerpoint2>0) {
+			System.out.print("\nDealer second hand card :");
+			System.out.print(Dhandcard);
+			System.out.println("\nDealerpoint:"+dealerpoint2);
+		}
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		boolean playagain = true;
 		while (playagain == true) {
 			Balckjack game = new Balckjack();
-			game.play();
+			game.play("file5.txt");
 			System.out.println("\nDo you want to play again ? (Y/N)");
 			if (new Scanner(System.in).next().equalsIgnoreCase("N")) {
 				playagain = false;

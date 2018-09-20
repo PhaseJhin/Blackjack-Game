@@ -1,37 +1,42 @@
 package core;
 
+import java.io.FileNotFoundException;
+
 import junit.framework.TestCase;
 
 public class BlackjackTest extends TestCase {
 	
-	public void TestWin1() {
-		Blackjackwin win = new Balckjackwin();
-		
-		assertEquals(Dwin, win.Win((SK,HA),(HQ,CA));
+	public void test1() throws FileNotFoundException {
+		Balckjack b = new Balckjack();
+		b.play("File2.txt");
+		assertEquals(2,b.handcard2.size());
 	}
 	
-	public void TestWin2() {
-		Blackjackwin win = new Balckjackwin();
-		
-		assertEquals(Pwin, win.Win((SK,HQ),(SQ,C5,DJ));
+	public void test2() throws FileNotFoundException {
+		Balckjack b = new Balckjack();
+		b.play("File2.txt");
+		assertEquals(20,b.point);
 	}
 	
-	public void TestWin3() {
-		Blackjackwin win = new Balckjackwin();
-		
-		assertEquals(Pwin, win.Win((S10,D3,SA),(SQ,C5,CA,D2));
+	public void test3() throws FileNotFoundException {
+		Balckjack b = new Balckjack();
+		b.play("File3.txt");
+		assertEquals(19,b.point);
 	}
 	
-	public void TestWin4() {
-		Blackjackwin win = new Balckjackwin();
+	public void test4() throws FileNotFoundException {
+		Balckjack b = new Balckjack();
+		b.play("File4.txt");
+		assertEquals(19,b.point);
+		assertEquals(20,b.point2);
 		
-		assertEquals(Pwin, win.Win((SK,HK,H6,C5),(CQ,D9));
 	}
 	
-	public void TestWin5() {
-		Blackjackwin win = new Balckjackwin();
-		
-		assertEquals(Pwin, win.Win((SK,HA),(HQ,CA));
+	public void test5() throws FileNotFoundException {
+		Balckjack b = new Balckjack();
+		b.play("File5.txt");
+		assertEquals(19,b.point);
+		assertEquals(22,b.dealerpoint);
+		assertEquals(18,b.dealerpoint2);
 	}
-
 }
