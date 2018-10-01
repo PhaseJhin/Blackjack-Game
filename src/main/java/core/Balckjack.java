@@ -555,7 +555,7 @@ public class Balckjack {
 		boolean playagain = true;
 		while (playagain == true) {
 			Balckjack game = new Balckjack();
-			game.play("file5.txt");
+			game.play("file2.txt");
 			System.out.println("\nDo you want to play again ? (Y/N)");
 			if (new Scanner(System.in).next().equalsIgnoreCase("N")) {
 				playagain = false;
